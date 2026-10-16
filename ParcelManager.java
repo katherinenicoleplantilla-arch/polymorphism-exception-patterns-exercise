@@ -14,6 +14,10 @@ public class ParcelManager {
         return instance;
     }
 
+    public boolean isEmpty() {
+        return parcels.isEmpty();
+    }
+
     public boolean exists(String trackingNumber) {
         for (Parcel p : parcels) {
             if (p.getTrackingNumber().equalsIgnoreCase(trackingNumber)) {

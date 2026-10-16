@@ -13,11 +13,11 @@ public abstract class Parcel {
         if (receiverName == null || receiverName.trim().isEmpty()) {
             throw new InvalidInputException("Receiver name cannot be empty!");
         }
-        if (weight <= 0) {
+        if (!(weight > 0)) {
             throw new InvalidInputException("Weight must be greater than 0!");
         }
         if (weight > getMaxWeight()) {
-            throw new InvalidInputException("Maximum weight for " + getType() + " is " + getMaxWeight() + " kg!");
+            throw new InvalidInputException(String.format("Maximum weight for %s is %.2f kg!", getType(), getMaxWeight()));
         }
         this.trackingNumber = trackingNumber;
         this.receiverName = receiverName.trim();
@@ -53,6 +53,8 @@ public abstract class Parcel {
 }
 
 class Document extends Parcel {
+    public static final double MAX_WEIGHT = 0.5;
+
     private final int pages;
 
     public Document(String trackingNumber, String receiverName, double weight, int pages)
@@ -68,7 +70,7 @@ class Document extends Parcel {
     public String getType() { return "Document"; }
 
     @Override
-    public double getMaxWeight() { return 0.5; }
+    public double getMaxWeight() { return MAX_WEIGHT; }
 
     @Override
     public double getChargeableWeight() { return getWeight(); }
@@ -80,6 +82,8 @@ class Document extends Parcel {
 }
 
 class Box extends Parcel {
+    public static final double MAX_WEIGHT = 50;
+
     private final int length;
     private final int width;
     private final int height;
@@ -96,14 +100,14 @@ class Box extends Parcel {
     }
 
     public double getVolumetricWeight() {
-        return (length * width * height) / 3500.0;
+        return ((double) length * width * height) / 3500.0;
     }
 
     @Override
     public String getType() { return "Box"; }
 
     @Override
-    public double getMaxWeight() { return 50; }
+    public double getMaxWeight() { return MAX_WEIGHT; }
 
     @Override
     public double getChargeableWeight() {
@@ -115,6 +119,8 @@ class Box extends Parcel {
 }
 
 class Fragile extends Box {
+    public static final double MAX_WEIGHT = 30;
+
     private final String handlingNote;
 
     public Fragile(String trackingNumber, String receiverName, double weight,
@@ -131,7 +137,7 @@ class Fragile extends Box {
     public String getType() { return "Fragile"; }
 
     @Override
-    public double getMaxWeight() { return 30; }
+    public double getMaxWeight() { return MAX_WEIGHT; }
 
     @Override
     public double getBaseFee() { return super.getBaseFee() + 100; }
