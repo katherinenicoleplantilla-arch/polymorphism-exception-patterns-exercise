@@ -121,13 +121,8 @@ public class ParcelDeliverySystem {
     }
 
     private void changeDeliveryService() {
-        if (manager.isEmpty()) {
-            System.out.println("No parcels yet.");
-            return;
-        }
         Parcel parcel = readExistingParcel();
         if (parcel == null) {
-            System.out.println("Cancelled.");
             return;
         }
         if (parcel.getStatus() == Status.DELIVERED) {
@@ -139,19 +134,12 @@ public class ParcelDeliverySystem {
             System.out.printf("Delivery service changed! New fee: Php %.2f%n", parcel.getDeliveryFee());
         } catch (SameDayNotAllowedException e) {
             System.out.println(e.getMessage());
-            System.out.println("The parcel keeps its current service ("
-                    + parcel.getDeliveryService().getName() + ").");
         }
     }
 
     private void markAsDelivered() {
-        if (manager.isEmpty()) {
-            System.out.println("No parcels yet.");
-            return;
-        }
         Parcel parcel = readExistingParcel();
         if (parcel == null) {
-            System.out.println("Cancelled.");
             return;
         }
         if (parcel.getStatus() == Status.DELIVERED) {
@@ -181,18 +169,17 @@ public class ParcelDeliverySystem {
         }
     }
 
-    // returns null if the user cancels by typing 0
     private Parcel readExistingParcel() {
         while (true) {
-            String tracking = prompt("Tracking number (e.g. ABC0001, 0 to cancel): ").toUpperCase();
-            if (tracking.equals("0")) {
-                return null;
-            }
+            String tracking = prompt("Tracking number (e.g. ABC0001): ").toUpperCase();
             try {
                 validateTrackingFormat(tracking);
                 return manager.findParcel(tracking);
-            } catch (InvalidInputException | ParcelNotFoundException e) {
+            } catch (InvalidInputException e) {
                 System.out.println(e.getMessage());
+            } catch (ParcelNotFoundException e) {
+                System.out.println(e.getMessage());
+                return null;
             }
         }
     }
@@ -245,7 +232,7 @@ public class ParcelDeliverySystem {
         return null;
     }
 
-        private int readDimension(String label) {
+    private int readDimension(String label) {
         int result = 0;
         boolean valid = false;
         while (!valid) {
