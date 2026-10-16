@@ -245,9 +245,26 @@ public class ParcelDeliverySystem {
         return null;
     }
 
-    private int readDimension(String label) {
-        return readInt(label + " in cm (whole number > 0): ",
-                "Invalid input! " + label + " must be a whole number greater than 0.", 1, Integer.MAX_VALUE);
+        private int readDimension(String label) {
+        int result = 0;
+        boolean valid = false;
+        while (!valid) {
+            String input = prompt(label + " in cm (whole number > 0): ");
+            try {
+                int value = Integer.parseInt(input);
+                if (value < 1) {
+                    System.out.println("Invalid input! " + label + " must be a whole number greater than 0.");
+                } else if (value > Box.MAX_DIMENSION) {
+                    System.out.println("Invalid input! " + label + " is too large for a parcel.");
+                } else {
+                    result = value;
+                    valid = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! " + label + " must be a whole number greater than 0.");
+            }
+        }
+        return result;
     }
 
     private int readInt(String promptText, String errorMessage, int min, int max) {

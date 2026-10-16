@@ -83,6 +83,7 @@ class Document extends Parcel {
 
 class Box extends Parcel {
     public static final double MAX_WEIGHT = 50;
+    public static final int MAX_DIMENSION = 200;
 
     private final int length;
     private final int width;
@@ -93,6 +94,9 @@ class Box extends Parcel {
         super(trackingNumber, receiverName, weight);
         if (length <= 0 || width <= 0 || height <= 0) {
             throw new InvalidInputException("Length, width, and height must be greater than 0!");
+        }
+        if (length > MAX_DIMENSION || width > MAX_DIMENSION || height > MAX_DIMENSION) {
+            throw new InvalidInputException("Length, width, and height are too large for a parcel!");
         }
         this.length = length;
         this.width = width;
@@ -117,7 +121,6 @@ class Box extends Parcel {
     @Override
     public double getBaseFee() { return 40 * getChargeableWeight(); }
 }
-
 class Fragile extends Box {
     public static final double MAX_WEIGHT = 30;
 
